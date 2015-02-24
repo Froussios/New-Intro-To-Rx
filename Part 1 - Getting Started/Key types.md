@@ -95,7 +95,7 @@ var observer = new MyConsoleObserver<int>();
 numbers.Subscribe(observer);
 ```
 
-Output:
+    Output:
     Received value 1
     Received value 2
     Received value 3
@@ -177,6 +177,7 @@ public void ReplaySubjectBufferExample()
 ```
 
 Here the output would show that the value 'a' had been dropped from the cache, but values 'b' and 'c' were still valid. The value 'd' was published after we subscribed so it is also written to the console.
+
     Output:
     b
     c
@@ -200,6 +201,7 @@ public void ReplaySubjectWindowExample()
 ```
 
 In the above example the window was specified as 150 milliseconds. Values are published 100 milliseconds apart. Once we have subscribed to the subject, the first value is 200ms old and as such has expired and been removed from the cache.
+
     Output:
     x
     y
