@@ -55,8 +55,8 @@ See more on TPL, Dataflow, async and C++ AMP at [Microsoft's Concurrency homepag
 
 Rx and specifically IObservable<T> is not a replacement for IEnumerable<T>. I would not recommend trying to take something that is naturally pull based and force it to be push based.
 
-    Translating existing IEnumerable<T> values to IObservable<T> just so that the code base can be "more Rx"
-    Message queues. Queues like in MSMQ or a JMS implementation generally have transactionality and are by definition sequential. I feel IEnumerable<T> is a natural fit for here.
+ *   Translating existing IEnumerable<T> values to IObservable<T> just so that the code base can be "more Rx"
+ *   Message queues. Queues like in MSMQ or a JMS implementation generally have transactionality and are by definition sequential. I feel IEnumerable<T> is a natural fit for here.
 
 By choosing the best tool for the job your code should be easier to maintain, provide better performance and you will probably get better support.
 
