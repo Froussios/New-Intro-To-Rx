@@ -10,7 +10,7 @@ __Cata(morphism) IObservable<T> --> T__
 
 __Bind IObservable<T1> --> IObservable<T2>__
 
-Now that we have been introduced to all three of our higher order functions, you may find that you already know them. Bind and Cata(morphism) were made famous by MapReduce framework from Google. Here Google refer to Bind and Cata by their perhaps more common aliases; Map and Reduce.
+Now that we have been introduced to all three of our higher order functions, you may find that you already know them. Bind and Cata(morphism) were made famous by [MapReduce](http://en.wikipedia.org/wiki/MapReduce) framework from Google. Here Google refer to Bind and Cata by their perhaps more common aliases; Map and Reduce.
 
 It may help to remember our terms as the ABCs of higher order functions.
 
