@@ -51,8 +51,8 @@ Note that each OnNext was called back on the same thread that it was notified on
 
 In the Rx world, there are generally two things you want to control the concurrency model for:
 
-    1. The invocation of the subscription
-    2. The observing of notifications
+1. The invocation of the subscription
+2. The observing of notifications
 
 As you could probably guess, these are exposed via two extension methods to IObservable<T> called SubscribeOn and ObserveOn. Both methods have an overload that take an IScheduler (or SynchronizationContext) and return an IObservable<T> so you can chain methods together.
 
@@ -138,15 +138,15 @@ Observe that the subscribe call is now non-blocking. The Create delegate is exec
 
 The ObserveOn method is used to declare where you want your notifications to be scheduled to. I would suggest the ObserveOn method is most useful when working with STA systems, most commonly UI applications. When writing UI applications, the SubscribeOn/ObserveOn pair is very useful for two reasons:
 
-    1. you do not want to block the UI thread
-    2. but you do need to update UI objects on the UI thread.
+1. you do not want to block the UI thread
+2. but you do need to update UI objects on the UI thread.
 
 It is critical to avoid blocking the UI thread, as doing so leads to a poor user experience. General guidance for Silverlight and WPF is that any work that blocks for longer than 150-250ms should not be performed on the UI thread (Dispatcher). This is approximately the period of time over which a user can notice a lag in the UI (mouse becomes sticky, animations sluggish). In the upcoming Metro style apps for Windows 8, the maximum allowed blocking time is only 50ms. This more stringent rule is to ensure a consistent "fast and fluid" experience across applications. With the processing power offered by current desktop processors, you can achieve a lot of processing 50ms. However, as processor become more varied (single/multi/many core, plus high power desktop vs. lower power ARM tablet/phones), how much you can do in 50ms fluctuates widely. In general terms: any I/O, computational intensive work or any processing unrelated to the UI should be marshaled off the UI thread. The general pattern for creating responsive UI applications is:
 
-    * respond to some sort of user action
-    * do work on a background thread
-    * pass the result back to the UI thread
-    * update the UI
+* respond to some sort of user action
+* do work on a background thread
+* pass the result back to the UI thread
+* update the UI
 
 This is a great fit for Rx: responding to events, potentially composing multiple events, passing data to chained method calls. With the inclusion of scheduling, we even have the power to get off and back onto the UI thread for that responsive application feel that users demand.
 
@@ -316,8 +316,8 @@ This odd implementation, with explicit scheduling, will cause the three OnNext c
 
 So far, this chapter may seem to say that concurrency is all doom and gloom by focusing on the problems you could face; this is not the intent though. We do not magically avoid classic concurrency problems simply by adopting Rx. Rx will however make it easier to get it right, provided you follow these two simple rules.
 
-    1. Only the final subscriber should be setting the scheduling
-    2. Avoid using blocking calls: e.g. First, Last and Single
+1. Only the final subscriber should be setting the scheduling
+2. Avoid using blocking calls: e.g. First, Last and Single
 
 The last example came unstuck with one simple problem; the service was dictating the scheduling paradigm when, really, it had no business doing so. Before we had a clear idea of where we should be doing the scheduling in my first Rx project, we had all sorts of layers adding 'helpful' scheduling code. What it ended up creating was a threading nightmare. When we removed all the scheduling code and then confined it it in a single layer (at least in the Silverlight client), most of our concurrency problems went away. I recommend you do the same. At least in WPF/Silverlight applications, the pattern should be simple: "Subscribe on a Background thread; Observe on the Dispatcher".
 
@@ -325,9 +325,9 @@ The last example came unstuck with one simple problem; the service was dictating
 
 We have only looked at the most simple usage of schedulers so far:
 
-    * Scheduling an action to be executed as soon as possible
-    * Scheduling the subscription of an observable sequence
-    * Scheduling the observation of notifications coming from an observable sequence
+* Scheduling an action to be executed as soon as possible
+* Scheduling the subscription of an observable sequence
+* Scheduling the observation of notifications coming from an observable sequence
 
 Schedulers also provide more advanced features that can help you with various problems.
 
@@ -710,10 +710,10 @@ public static IObservable<byte> ToObservable(
 
 We now have an iterator action that will:
 
-    1. call ReadNext()
-    2. subscribe to the result
-    3. push the buffer into the observable sequence
-    4. and recursively call itself.
+1. call ReadNext()
+2. subscribe to the result
+3. push the buffer into the observable sequence
+4. and recursively call itself.
 
 We also schedule this recursive action to be called on the provided scheduler. Next, we want to complete the sequence when we get to the end of the file. This is easy, we maintain the recursion until the bytesRead is 0.
 
@@ -1096,19 +1096,19 @@ With all of these options to choose from, it can be hard to know which scheduler
 
 ### UI Applications
 
-    * The final subscriber is normally the presentation layer and should control the scheduling.
-    * Observe on the DispatcherScheduler to allow updating of ViewModels
-    * Subscribe on a background thread to prevent the UI from becoming unresponsive
-        * If the subscription will not block for more than 50ms then
-            * Use the TaskPoolScheduler if available, or
-            * Use the ThreadPoolScheduler
-        * If any part of the subscription could block for longer than 50ms, then you should use the NewThreadScheduler. 
+* The final subscriber is normally the presentation layer and should control the scheduling.
+* Observe on the DispatcherScheduler to allow updating of ViewModels
+* Subscribe on a background thread to prevent the UI from becoming unresponsive
+    * If the subscription will not block for more than 50ms then
+        * Use the TaskPoolScheduler if available, or
+        * Use the ThreadPoolScheduler
+    * If any part of the subscription could block for longer than 50ms, then you should use the NewThreadScheduler. 
 
 ### Service layer
 
-    * If your service is reading data from a queue of some sort, consider using a dedicated EventLoopScheduler. This way, you can preserve order of events
-    * If processing an item is expensive (>50ms or requires I/O), then consider using a NewThreadScheduler
-    * If you just need the scheduler for a timer, e.g. for Observable.Interval or Observable.Timer, then favor the TaskPool. Use the ThreadPool if the TaskPool is not available for your platform.
+* If your service is reading data from a queue of some sort, consider using a dedicated EventLoopScheduler. This way, you can preserve order of events
+* If processing an item is expensive (>50ms or requires I/O), then consider using a NewThreadScheduler
+* If you just need the scheduler for a timer, e.g. for Observable.Interval or Observable.Timer, then favor the TaskPool. Use the ThreadPool if the TaskPool is not available for your platform.
 
 The ThreadPool (and the TaskPool by proxy) have a time delay before they will increase the number of threads that they use. This delay is 500ms. Let us consider a PC with two cores that we will schedule four actions onto. By default, the thread pool size will be the number of cores (2). If each action takes 1000ms, then two actions will be sitting in the queue for 500ms before the thread pool size is increased. Instead of running all four actions in parallel, which would take one second in total, the work is not completed for 1.5 seconds as two of the actions sat in the queue for 500ms. For this reason, you should only schedule work that is very fast to execute (guideline 50ms) onto the ThreadPool or TaskPool. Conversely, creating a new thread is not free, but with the power of processors today the creation of a thread for work over 50ms is a small cost.
 
