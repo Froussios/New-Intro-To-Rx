@@ -16,7 +16,7 @@ This class simply has the Dispose method and a read-only property IsDisposed. Is
     
 ### CancellationDisposable
 
-The CancellationDisposable class offers an integration point between the .NET cancellation paradigm (CancellationTokenSource) and the resource management paradigm (IDisposable). You can create an instance of the CancellationDisposable class by providing a CancellationTokenSource to the constructor, or by having the parameterless constructor create one for you. Calling Dispose will invoke the Cancel method on the CancellationTokenSource. There are two properties (Token and IsDisposed) that CancellationDisposable exposes; they are wrappers for the CancellationTokenSource properties, respectively Token and IsCancellationRequested. 
+The CancellationDisposable class offers an integration point between the .NET [cancellation paradigm](http://msdn.microsoft.com/en-us/library/dd997364.aspx) (CancellationTokenSource) and the resource management paradigm (IDisposable). You can create an instance of the CancellationDisposable class by providing a CancellationTokenSource to the constructor, or by having the parameterless constructor create one for you. Calling Dispose will invoke the Cancel method on the CancellationTokenSource. There are two properties (Token and IsDisposed) that CancellationDisposable exposes; they are wrappers for the CancellationTokenSource properties, respectively Token and IsCancellationRequested. 
     
 ### CompositeDisposable
 
