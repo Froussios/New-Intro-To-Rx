@@ -1,4 +1,6 @@
- This is a list of quick guidelines intended to help you when writing Rx queries.
+# Usage guidelines
+
+This is a list of quick guidelines intended to help you when writing Rx queries.
 
 * Members that return a sequence should never return null. This applies to IEnumerable<T> and IObservable<T> sequences. Return an empty sequence instead.
 * Dispose of subscriptions.
