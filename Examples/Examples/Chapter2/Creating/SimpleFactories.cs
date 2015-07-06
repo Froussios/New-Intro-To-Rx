@@ -10,51 +10,51 @@ namespace IntroToRx.Examples
 {
     class SimpleFactories
     {
-        //TODO: improve format
-
         public void ExampleReturn()
         {
             var singleValue = Observable.Return<string>("Value");
-            //which could have also been simulated with a replay subject
-            var subject = new ReplaySubject<string>();
-            subject.OnNext("Value");
-            subject.OnCompleted();
 
-            singleValue.Subscribe(Console.WriteLine);
-            
+            singleValue.Subscribe(
+                Console.WriteLine,
+                Console.WriteLine,
+                () => Console.WriteLine("Completed"));
+
             //Value
+            //Completed
         }
 
         public void ExampleEmpty()
         {
             var empty = Observable.Empty<string>();
-            //Behaviorally equivalent to
-            var subject = new ReplaySubject<string>();
-            subject.OnCompleted();
 
-            empty.Subscribe(Console.WriteLine);
+            empty.Subscribe(
+                Console.WriteLine,
+                Console.WriteLine,
+                () => Console.WriteLine("Completed"));
+
+            //Completed
         }
 
         public void ExampleNever()
         {
             var never = Observable.Never<string>();
-            //similar to a subject without notifications
-            var subject = new Subject<string>();
 
-            never.Subscribe(Console.WriteLine);
+            never.Subscribe(
+                Console.WriteLine,
+                Console.WriteLine,
+                () => Console.WriteLine("Completed"));
+
+            //
         }
 
         public void ExampleThrow()
         {
             var throws = Observable.Throw<string>(new Exception());
-            //Behaviorally equivalent to
-            var subject = new ReplaySubject<string>();
-            subject.OnError(new Exception());
 
             throws.Subscribe(
                 Console.WriteLine,
                 Console.WriteLine,
-                Console.WriteLine);
+                () => Console.WriteLine("Completed"));
 
             //System.Exception: Exception of type 'System.Exception' was thrown.
         }
